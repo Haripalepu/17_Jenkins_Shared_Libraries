@@ -2,7 +2,7 @@
 //We have to call this file from 17_Jenkins_Catalogue/Jenkinsfile.
 //We have to add this git repo in jenkins system configurations then only jenkinfiles can call this.
 
-
+def call(Map configMap){  //call is a function 
 pipeline {
     agent {
         node {
@@ -114,4 +114,5 @@ pipeline {
             echo 'I will say Hello when pipeline is success'
         }
     }
+}
 }
