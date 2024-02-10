@@ -60,7 +60,7 @@ pipeline {
             steps {   // zip is a linux command to zip the files -x to exclude the files while zipping, -q to hide the running log, it is unnecessary and waste of memory.
                 sh """
                     ls -la
-                    zip -q -r ${configMap.host_name}.zip ./* -x ".git" -x "*.zip" 
+                    zip -q -r ${configMap.component}.zip ./* -x ".git" -x "*.zip" 
                     ls -ltr
                 """
             }
@@ -73,12 +73,12 @@ pipeline {
                     nexusUrl: pipelineGlobals.nexusURL(), //Refering from pipelineglobals
                     groupId: 'com.roboshop',
                     version: "${packageVersion}",
-                    repository: "${configMap.host_name}",
+                    repository: "${configMap.component}",
                     credentialsId: 'Nexus_credentials', //Configure the Nexus credentials in jenkins and name it here
                     artifacts: [
-                        [artifactId: "${configMap.host_name}",
+                        [artifactId: "${configMap.component}",
                         classifier: '',
-                        file: "${configMap.host_name}.zip",
+                        file: "${configMap.component}.zip",
                         type: 'zip']
                     ]
                 )
@@ -96,7 +96,7 @@ pipeline {
                             string(name: 'version', value: "$packageVersion"),
                             string(name: 'environment', value: "dev")
                         ]
-                        build job: "../${configMap.host_name}-deploy", wait: true, parameters: params //Build job is to pass version & environment to catalogue-downstream job. This stage will wait till downstream job completes.
+                        build job: "../${configMap.component}-deploy", wait: true, parameters: params //Build job is to pass version & environment to catalogue-downstream job. This stage will wait till downstream job completes.
                     }               //catalogue-deploy is a pipeline name
             }                       // Added ../ to go one step back from multibranch piepline as catalogue-CI is a folder
         }
