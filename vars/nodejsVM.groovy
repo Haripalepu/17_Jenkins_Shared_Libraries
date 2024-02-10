@@ -87,7 +87,7 @@ pipeline {
         stage('Deploy') {
             when {
                 expression{
-                    params.Deploy == 'true' //In parameters the deploy we given as false so if it is true then only this deploy will execute. While doing CI testing it is not necessary to do CD evreytime.
+                    params.Deploy == 'false' //In parameters the deploy we given as false so if it is true then only this deploy will execute. While doing CI testing it is not necessary to do CD evreytime.
                 }
             }
             steps {
@@ -96,9 +96,9 @@ pipeline {
                             string(name: 'version', value: "$packageVersion"),
                             string(name: 'environment', value: "dev")
                         ]
-                        build job: "${configMap.host_name}-deploy", wait: true, parameters: params //Build job is to pass version & environment to catalogue-downstream job. This stage will wait till downstream job completes.
+                        build job: "../${configMap.host_name}-deploy", wait: true, parameters: params //Build job is to pass version & environment to catalogue-downstream job. This stage will wait till downstream job completes.
                     }               //catalogue-deploy is a pipeline name
-            }
+            }                       // Added ../ to go one step back from multibranch piepline as catalogue-CI is a folder
         }
      }
     // post build
