@@ -12,7 +12,7 @@ pipeline {
 
     environment { 
         packageVersion = ''
-        nexusURL = '172.31.81.162:8081' //Mention your Nexus Url
+        //nexusURL = '172.31.81.162:8081' //Mention your Nexus Url. Commneted this as we are using pipelineglobals.
     }
 
     options {
@@ -60,7 +60,7 @@ pipeline {
             steps {   // zip is a linux command to zip the files -x to exclude the files while zipping, -q to hide the running log, it is unnecessary and waste of memory.
                 sh """
                     ls -la
-                    zip -q -r catalogue.zip ./* -x ".git" -x "*.zip" 
+                    zip -q -r ${configMap.host_name}.zip ./* -x ".git" -x "*.zip" 
                     ls -ltr
                 """
             }
@@ -70,15 +70,15 @@ pipeline {
                  nexusArtifactUploader(
                     nexusVersion: 'nexus3',
                     protocol: 'http',
-                    nexusUrl: "${nexusURL}",
+                    nexusUrl: pipelineGlobals.nexusURL(), //Refering from pipelineglobals
                     groupId: 'com.roboshop',
                     version: "${packageVersion}",
-                    repository: 'catalogue',
+                    repository: '${configMap.host_name}',
                     credentialsId: 'Nexus_credentials', //Configure the Nexus credentials in jenkins and name it here
                     artifacts: [
-                        [artifactId: 'catalogue',
+                        [artifactId: '${configMap.host_name}',
                         classifier: '',
-                        file: 'catalogue.zip',
+                        file: '${configMap.host_name}.zip',
                         type: 'zip']
                     ]
                 )
@@ -96,7 +96,7 @@ pipeline {
                             string(name: 'version', value: "$packageVersion"),
                             string(name: 'environment', value: "dev")
                         ]
-                        build job: "catalogue-deploy", wait: true, parameters: params //Build job is to pass version & environment to catalogue-downstream job. This stage will wait till downstream job completes.
+                        build job: "${configMap.host_name}-deploy", wait: true, parameters: params //Build job is to pass version & environment to catalogue-downstream job. This stage will wait till downstream job completes.
                     }               //catalogue-deploy is a pipeline name
             }
         }
