@@ -73,12 +73,12 @@ pipeline {
                     nexusUrl: pipelineGlobals.nexusURL(), //Refering from pipelineglobals
                     groupId: 'com.roboshop',
                     version: "${packageVersion}",
-                    repository: '${configMap.host_name}',
+                    repository: "${configMap.host_name}",
                     credentialsId: 'Nexus_credentials', //Configure the Nexus credentials in jenkins and name it here
                     artifacts: [
-                        [artifactId: '${configMap.host_name}',
+                        [artifactId: "${configMap.host_name}",
                         classifier: '',
-                        file: '${configMap.host_name}.zip',
+                        file: "${configMap.host_name}.zip",
                         type: 'zip']
                     ]
                 )
