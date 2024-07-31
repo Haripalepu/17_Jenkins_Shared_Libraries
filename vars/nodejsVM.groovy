@@ -1,6 +1,6 @@
 //This pipeline works for any Node js language project & which is going to deploy the application in VM.
 //We have to call this file from 17_Jenkins_Catalogue/Jenkinsfile.
-//We have to add this git repo in jenkins system configurations then only jenkinfiles can call this.
+//We have to add this git repo in jenkins system configurations then only jenkinfiles can call this...
 
 def call(Map configMap){  //call is a function 
 pipeline {
